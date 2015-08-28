@@ -276,6 +276,7 @@ static SIAlertView *__si_alert_current_view;
     if (self) {
         _title = title;
         _customMessageView = customView;
+        _customMessageViewRect = customView.bounds;
         _enabledParallaxEffect = YES;
         self.items = [[NSMutableArray alloc] init];
     }
@@ -762,7 +763,7 @@ static SIAlertView *__si_alert_current_view;
         if (y > CONTENT_PADDING_TOP) {
             y += GAP;
         }
-        CGSize size = self.customMessageView.frame.size;
+        CGSize size = self.customMessageViewRect.size;
         CGFloat height = size.height;
         self.customMessageView.frame = CGRectMake(CONTENT_PADDING_LEFT, y, CONTAINER_WIDTH - (2 * CONTENT_PADDING_LEFT), size.height);
         y += height;

@@ -46,6 +46,7 @@ typedef void(^SIAlertViewHandler)(SIAlertView *alertView);
 @property (nonatomic, copy) NSString *message;
 @property (nonatomic, copy) UIView *customMessageView;
 
+@property (nonatomic, assign) CGRect customMessageViewRect;
 @property (nonatomic, assign) SIAlertViewTransitionStyle transitionStyle; // default is SIAlertViewTransitionStyleSlideFromBottom
 @property (nonatomic, assign) SIAlertViewBackgroundStyle backgroundStyle; // default is SIAlertViewBackgroundStyleGradient
 @property (nonatomic, assign) SIAlertViewButtonsListStyle buttonsListStyle; // default is SIAlertViewButtonsListStyleNormal
