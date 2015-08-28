@@ -793,10 +793,10 @@ static SIAlertView *__si_alert_current_view;
             for (NSUInteger i = 0; i < self.buttons.count; i++) {
                 UIButton *button = self.buttons[i];
                 button.frame = CGRectMake(0, y, self.containerView.bounds.size.width, BUTTON_HEIGHT);
+                if (i == 0) {
+                    [self addBorderTop:button];
+                }
                 if (self.buttons.count > 1) {
-                    if (i == 0) {
-                        [self addBorderTop:button];
-                    }
                     if (i == self.buttons.count - 1) {
                         if (((SIAlertItem *)self.items[i]).type == SIAlertViewButtonTypeCancel) {
                             CGRect rect = button.frame;
