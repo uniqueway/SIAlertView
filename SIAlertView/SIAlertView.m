@@ -26,7 +26,7 @@ NSString *const SIAlertViewDidDismissNotification = @"SIAlertViewDidDismissNotif
 #define CONTENT_PADDING_TOP 20
 #define CONTENT_PADDING_BOTTOM 0
 #define BUTTON_HEIGHT 44
-#define MAX_CONTAINER_WIDTH 320
+#define MAX_CONTAINER_WIDTH 300
 #define CONTAINER_WIDTH (((SCREEN_WIDTH - 20) < MAX_CONTAINER_WIDTH) ? (SCREEN_WIDTH - 20) : MAX_CONTAINER_WIDTH)
 #define BUTTON_AREA_BORDER_WIDTH 0.5f
 #define BUTTON_AREA_BORDER_COLOR [UIColor colorWithRed:221.0/255.0 green:221.0/255.0 blue:221.0/255.0 alpha:1]
@@ -454,12 +454,29 @@ static SIAlertView *__si_alert_current_view;
 
 - (void)dismissAnimated:(BOOL)animated
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:SIAlertViewWillDismissNotification object:self userInfo:nil];
 //    [self dismissAnimated:animated cleanup:YES];
     for (SIAlertView *view in [SIAlertView sharedQueue]) {
         [view teardown];
     }
     __si_alert_queue = [@[] mutableCopy];
     [SIAlertView setCurrentAlertView:nil];
+    [SIAlertView hideBackgroundAnimated:YES];
+    [SIAlertView setAnimating:NO];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:SIAlertViewDidDismissNotification object:self userInfo:nil];
+    
+    UIWindow *window = self.oldKeyWindow;
+#ifdef __IPHONE_7_0
+    if ([window respondsToSelector:@selector(setTintAdjustmentMode:)]) {
+        window.tintAdjustmentMode = self.oldTintAdjustmentMode;
+    }
+#endif
+    if (!window) {
+        window = [UIApplication sharedApplication].windows[0];
+    }
+    [window makeKeyWindow];
+    window.hidden = NO;
 
 
 }
@@ -559,6 +576,7 @@ static SIAlertView *__si_alert_current_view;
             CGRect rect = self.containerView.frame;
             CGRect originalRect = rect;
             rect.origin.y = self.bounds.size.height;
+            rect.size.width = CONTAINER_WIDTH;
             self.containerView.frame = rect;
             [UIView animateWithDuration:0.3
                              animations:^{
@@ -576,6 +594,7 @@ static SIAlertView *__si_alert_current_view;
             CGRect rect = self.containerView.frame;
             CGRect originalRect = rect;
             rect.origin.y = -rect.size.height;
+            rect.size.width = CONTAINER_WIDTH;
             self.containerView.frame = rect;
             [UIView animateWithDuration:0.3
                              animations:^{
@@ -752,7 +771,7 @@ static SIAlertView *__si_alert_current_view;
     CGFloat height = [self preferredHeight];
     CGFloat left = (self.bounds.size.width - CONTAINER_WIDTH) * 0.5;
     CGFloat top = (self.bounds.size.height - height) * 0.5;
-    self.containerView.transform = CGAffineTransformIdentity;
+//    self.containerView.transform = CGAffineTransformIdentity;
     self.containerView.frame = CGRectMake(left, top, CONTAINER_WIDTH, height);
     self.containerView.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.containerView.bounds cornerRadius:self.containerView.layer.cornerRadius].CGPath;
     
@@ -952,7 +971,7 @@ static SIAlertView *__si_alert_current_view;
 
 - (void)setupContainerView
 {
-    self.containerView = [[UIView alloc] initWithFrame:self.bounds];
+    self.containerView = [[UIView alloc] init];
     self.containerView.backgroundColor = _viewBackgroundColor ? _viewBackgroundColor : [UIColor whiteColor];
     self.containerView.layer.cornerRadius = self.cornerRadius;
     self.containerView.layer.shadowOffset = CGSizeZero;
