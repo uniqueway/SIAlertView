@@ -63,6 +63,7 @@
 - (IBAction)alert1:(id)sender
 {
     SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:@"" andMessage:@"Count down willShowHandler2 willShowHandler2 willShowHandler2 willShowHandler2"];
+    alertView.contentWidth = 100;
     [alertView addButtonWithTitle:@"Button1"
                              type:SIAlertViewButtonTypeDefault
                           handler:^(SIAlertView *alertView) {

@@ -380,6 +380,9 @@ static SIAlertView *__si_alert_current_view;
 
 - (void)show
 {
+    if (!self.contentWidth) {
+        self.contentWidth = CONTAINER_WIDTH;
+    }
     if (self.isVisible) {
         return;
     }
@@ -576,7 +579,7 @@ static SIAlertView *__si_alert_current_view;
             CGRect rect = self.containerView.frame;
             CGRect originalRect = rect;
             rect.origin.y = self.bounds.size.height;
-            rect.size.width = CONTAINER_WIDTH;
+            rect.size.width = self.contentWidth;
             self.containerView.frame = rect;
             [UIView animateWithDuration:0.3
                              animations:^{
@@ -594,7 +597,7 @@ static SIAlertView *__si_alert_current_view;
             CGRect rect = self.containerView.frame;
             CGRect originalRect = rect;
             rect.origin.y = -rect.size.height;
-            rect.size.width = CONTAINER_WIDTH;
+            rect.size.width = self.contentWidth;
             self.containerView.frame = rect;
             [UIView animateWithDuration:0.3
                              animations:^{
@@ -769,10 +772,10 @@ static SIAlertView *__si_alert_current_view;
 #endif
     
     CGFloat height = [self preferredHeight];
-    CGFloat left = (self.bounds.size.width - CONTAINER_WIDTH) * 0.5;
+    CGFloat left = (self.bounds.size.width - self.contentWidth) * 0.5;
     CGFloat top = (self.bounds.size.height - height) * 0.5;
 //    self.containerView.transform = CGAffineTransformIdentity;
-    self.containerView.frame = CGRectMake(left, top, CONTAINER_WIDTH, height);
+    self.containerView.frame = CGRectMake(left, top, self.contentWidth, height);
     self.containerView.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.containerView.bounds cornerRadius:self.containerView.layer.cornerRadius].CGPath;
     
     CGFloat y = CONTENT_PADDING_TOP;
@@ -792,7 +795,7 @@ static SIAlertView *__si_alert_current_view;
         }
         CGSize size = self.customMessageViewRect.size;
         CGFloat height = size.height;
-        self.customMessageView.frame = CGRectMake(CONTENT_PADDING_LEFT, y, CONTAINER_WIDTH - (2 * CONTENT_PADDING_LEFT), size.height);
+        self.customMessageView.frame = CGRectMake(CONTENT_PADDING_LEFT, y, self.contentWidth - (2 * CONTENT_PADDING_LEFT), size.height);
         y += height;
     } else if (self.messageLabel) {
         if (y > CONTENT_PADDING_TOP) {
@@ -890,7 +893,7 @@ static SIAlertView *__si_alert_current_view;
         
         // NSString class method: boundingRectWithSize:options:attributes:context is
         // available only on ios7.0 sdk.
-        CGRect rect = [self.titleLabel.text boundingRectWithSize:CGSizeMake(CONTAINER_WIDTH - CONTENT_PADDING_LEFT * 2, CGFLOAT_MAX)
+        CGRect rect = [self.titleLabel.text boundingRectWithSize:CGSizeMake(self.contentWidth - CONTENT_PADDING_LEFT * 2, CGFLOAT_MAX)
                                                          options:NSStringDrawingUsesLineFragmentOrigin
                                                       attributes:attributes
                                                          context:nil];
@@ -904,7 +907,7 @@ static SIAlertView *__si_alert_current_view;
                        self.titleLabel.minimumFontSize
 #endif
                                 actualFontSize:nil
-                                      forWidth:CONTAINER_WIDTH - CONTENT_PADDING_LEFT * 2
+                                      forWidth:self.contentWidth - CONTENT_PADDING_LEFT * 2
                                  lineBreakMode:self.titleLabel.lineBreakMode];
         return size.height;
 #endif
@@ -928,7 +931,7 @@ static SIAlertView *__si_alert_current_view;
         
         // NSString class method: boundingRectWithSize:options:attributes:context is
         // available only on ios7.0 sdk.
-        CGRect rect = [self.titleLabel.text boundingRectWithSize:CGSizeMake(CONTAINER_WIDTH - CONTENT_PADDING_LEFT * 2, maxHeight)
+        CGRect rect = [self.titleLabel.text boundingRectWithSize:CGSizeMake(self.contentWidth - CONTENT_PADDING_LEFT * 2, maxHeight)
                                                          options:NSStringDrawingUsesLineFragmentOrigin
                                                       attributes:attributes
                                                          context:nil];
@@ -936,7 +939,7 @@ static SIAlertView *__si_alert_current_view;
         return MAX(minHeight, ceil(rect.size.height));
 #else
         CGSize size = [self.message sizeWithFont:self.messageLabel.font
-                               constrainedToSize:CGSizeMake(CONTAINER_WIDTH - CONTENT_PADDING_LEFT * 2, maxHeight)
+                               constrainedToSize:CGSizeMake(self.contentWidth - CONTENT_PADDING_LEFT * 2, maxHeight)
                                    lineBreakMode:self.messageLabel.lineBreakMode];
         
         return MAX(minHeight, size.height);
