@@ -1103,7 +1103,7 @@ static SIAlertView *__si_alert_current_view;
             break;
     }
     UIImage *buttonBackground = [self imageWithColor:[UIColor colorWithRed:237.0/255.0 green:236.0/255.0 blue:235.0/255.0 alpha:1]];
-    [button setBackgroundImage:buttonBackground forState:buttonBackground];
+    [button setBackgroundImage:buttonBackground forState:UIControlStateNormal];
     [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
