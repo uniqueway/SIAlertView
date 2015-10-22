@@ -386,7 +386,6 @@ static SIAlertView *__si_alert_current_view;
     if (self.isVisible) {
         return;
     }
-    
     self.oldKeyWindow = [[UIApplication sharedApplication] keyWindow];
 #ifdef __IPHONE_7_0
     if ([self.oldKeyWindow respondsToSelector:@selector(setTintAdjustmentMode:)]) { // for iOS 7
@@ -437,14 +436,27 @@ static SIAlertView *__si_alert_current_view;
     
     [self validateLayout];
     
+    if ([self.class currentAlertView]) {
+        if (self.didShowHandler) {
+            self.didShowHandler(self);
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:SIAlertViewDidShowNotification object:self userInfo:nil];
+        
+        [SIAlertView setAnimating:NO];
+        NSInteger index = [[SIAlertView sharedQueue] indexOfObject:self];
+        if (index < [SIAlertView sharedQueue].count - 1) {
+            [self dismissAnimated:YES cleanup:NO]; // dismiss to show next alert view
+        }
+
+        return;
+    }
+
+    
     [self transitionInCompletion:^{
         if (self.didShowHandler) {
             self.didShowHandler(self);
         }
         [[NSNotificationCenter defaultCenter] postNotificationName:SIAlertViewDidShowNotification object:self userInfo:nil];
-#ifdef __IPHONE_7_0
-        [self addParallaxEffect];
-#endif
         
         [SIAlertView setAnimating:NO];
         
@@ -539,6 +551,10 @@ static SIAlertView *__si_alert_current_view;
             }
         }
     };
+    
+    if ([self.class currentAlertView]) {
+        animated = false;
+    }
     
     if (animated && isVisible) {
         [SIAlertView setAnimating:YES];

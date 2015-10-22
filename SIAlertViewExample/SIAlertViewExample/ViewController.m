@@ -62,7 +62,7 @@
 
 - (IBAction)alert1:(id)sender
 {
-    SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:@"" andMessage:@"Count down willShowHandler2 willShowHandler2 willShowHandler2 willShowHandler2"];
+    SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:@"ssss" andMessage:@"Count down willShowHandler2 willShowHandler2 willShowHandler2 willShowHandler2"];
     alertView.contentWidth = 100;
     [alertView addButtonWithTitle:@"Button1"
                              type:SIAlertViewButtonTypeDefault
@@ -124,7 +124,7 @@
 
 - (IBAction)alert2:(id)sender
 {
-    SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:@"" andMessage:@"Message2"];
+    SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:@"111" andMessage:@"Message2"];
     [alertView addButtonWithTitle:@"Cancel"
                              type:SIAlertViewButtonTypeCancel
                           handler:^(SIAlertView *alertView) {
@@ -174,8 +174,10 @@ id observer1,observer2,observer3,observer4;
     image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"button-destructive-d.png"]];
     image.frame = CGRectMake(0, 20, 10, 10);
     [view addSubview:image];
-    
-    SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:@"" andCustomView:view];
+    CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
+    NSString *uuidString = (__bridge_transfer NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid);
+
+    SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"id:%@",uuidString] andCustomView:view];
     [alertView addButtonWithTitle:@"Cancel"
                              type:SIAlertViewButtonTypeCancel
                           handler:^(SIAlertView *alertView) {
@@ -239,9 +241,9 @@ id observer1,observer2,observer3,observer4;
 
 - (IBAction)alert4:(id)sender
 {
-    [self alert1:nil];
-    [self alert2:nil];
+        [self alert3:nil];
     [self alert3:nil];
+            [self alert3:nil];
 }
 
 - (NSUInteger)supportedInterfaceOrientations
